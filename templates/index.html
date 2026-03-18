@@ -19,35 +19,53 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 28px;
+      padding: 16px 28px;
       background: #111422;
       border-bottom: 1px solid #1e2235;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    .header h1 { font-size: 1.15rem; color: #fff; font-weight: 600; letter-spacing: .3px; }
-    .header-sub { font-size: 0.78rem; color: #5a6080; margin-top: 2px; }
-    .header-actions { display: flex; gap: 10px; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .header h1 { font-size: 1.1rem; color: #fff; font-weight: 600; }
+    .header-sub { font-size: 0.75rem; color: #5a6080; margin-top: 2px; }
+    .live-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #27ae60;
+      animation: livepulse 1.4s ease-in-out infinite;
+      display: none;
+    }
+    .live-dot.visible { display: block; }
+    @keyframes livepulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.3)} }
+
+    .header-actions { display: flex; gap: 8px; align-items: center; }
 
     /* ── Buttons ── */
     .btn {
-      padding: 8px 20px;
+      padding: 7px 16px;
       border: none;
       border-radius: 6px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
       transition: opacity 0.15s, background 0.15s;
+      white-space: nowrap;
     }
-    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
-    .btn-primary  { background: #4a7cf7; color: #fff; }
-    .btn-primary:hover:not(:disabled)  { background: #3a6ce6; }
-    .btn-danger   { background: #c0392b; color: #fff; }
-    .btn-danger:hover:not(:disabled)   { background: #a93226; }
-    .btn-ghost    { background: #1e2235; color: #9aa0c0; border: 1px solid #2a2f4a; }
-    .btn-ghost:hover:not(:disabled)    { background: #252a42; }
-    .btn-sm       { padding: 6px 14px; font-size: 0.8rem; }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .btn-primary { background: #4a7cf7; color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: #3a6ce6; }
+    .btn-danger  { background: #c0392b; color: #fff; }
+    .btn-danger:hover:not(:disabled)  { background: #a93226; }
+    .btn-warning { background: #e67e22; color: #fff; }
+    .btn-warning:hover:not(:disabled) { background: #d35400; }
+    .btn-success { background: #27ae60; color: #fff; }
+    .btn-success:hover:not(:disabled) { background: #219a52; }
+    .btn-ghost   { background: #1e2235; color: #9aa0c0; border: 1px solid #2a2f4a; }
+    .btn-ghost:hover:not(:disabled)   { background: #252a42; }
+    .btn-sm { padding: 5px 12px; font-size: 0.78rem; }
 
     /* ── Main layout ── */
-    .main { max-width: 860px; margin: 0 auto; padding: 24px 20px 60px; }
+    .main { max-width: 900px; margin: 0 auto; padding: 24px 20px 80px; }
 
     /* ── Card ── */
     .card {
@@ -55,28 +73,29 @@
       border: 1px solid #1e2235;
       border-radius: 10px;
       padding: 20px 22px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
     .card-title {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      letter-spacing: 1px;
+      letter-spacing: 1.1px;
       color: #5a6080;
       text-transform: uppercase;
       margin-bottom: 14px;
     }
 
     /* ── Input section ── */
-    .input-row { display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start; }
+    .input-row { display: flex; gap: 12px; align-items: flex-start; }
+    .input-col { flex: 1; display: flex; flex-direction: column; gap: 10px; }
     textarea {
-      flex: 1;
-      height: 110px;
+      width: 100%;
+      height: 100px;
       background: #0b0d14;
       border: 1px solid #1e2235;
       border-radius: 6px;
       color: #d4d8e8;
       padding: 10px 12px;
-      font-size: 0.87rem;
+      font-size: 0.85rem;
       resize: vertical;
       outline: none;
       font-family: 'Courier New', monospace;
@@ -85,43 +104,44 @@
     textarea:focus { border-color: #4a7cf7; }
     textarea::placeholder { color: #3a3f60; }
 
+    .num-count { font-size: 0.75rem; color: #5a6080; }
+    .num-count span { color: #4a7cf7; font-weight: 600; }
+
     .input-controls {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       flex-wrap: wrap;
     }
     .delay-wrap {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 0.83rem;
+      gap: 7px;
+      font-size: 0.82rem;
       color: #6a70a0;
     }
     .delay-wrap input[type=number] {
-      width: 60px;
+      width: 56px;
       background: #0b0d14;
       border: 1px solid #1e2235;
       border-radius: 6px;
       color: #d4d8e8;
-      padding: 6px 8px;
+      padding: 5px 8px;
       font-size: 0.85rem;
       outline: none;
       text-align: center;
     }
     .delay-wrap input:focus { border-color: #4a7cf7; }
-
     #csv-input { display: none; }
 
     /* ── Stats bar ── */
     .stats-bar {
       display: flex;
-      gap: 0;
       background: #111422;
       border: 1px solid #1e2235;
       border-radius: 10px;
       overflow: hidden;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
     .stat-item {
       flex: 1;
@@ -130,31 +150,20 @@
       border-right: 1px solid #1e2235;
     }
     .stat-item:last-child { border-right: none; }
-    .stat-num {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #fff;
-      line-height: 1;
-    }
-    .stat-label {
-      font-size: 0.7rem;
-      color: #5a6080;
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      margin-top: 4px;
-    }
-    .stat-item.calling .stat-num  { color: #4a7cf7; }
-    .stat-item.done .stat-num     { color: #27ae60; }
-    .stat-item.failed .stat-num   { color: #e74c3c; }
-    .stat-item.voicemail .stat-num { color: #f39c12; }
+    .stat-num { font-size: 1.5rem; font-weight: 700; color: #fff; line-height: 1; }
+    .stat-label { font-size: 0.68rem; color: #5a6080; text-transform: uppercase; letter-spacing: .8px; margin-top: 5px; }
+    .stat-item.s-calling  .stat-num { color: #4a7cf7; }
+    .stat-item.s-done     .stat-num { color: #27ae60; }
+    .stat-item.s-failed   .stat-num { color: #e74c3c; }
+    .stat-item.s-voicemail .stat-num { color: #f39c12; }
 
-    /* ── Progress bar ── */
+    /* ── Progress ── */
     .progress-wrap {
       background: #111422;
       border: 1px solid #1e2235;
       border-radius: 10px;
       padding: 14px 20px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
     .progress-header {
       display: flex;
@@ -163,12 +172,7 @@
       color: #5a6080;
       margin-bottom: 10px;
     }
-    .progress-track {
-      height: 6px;
-      background: #1e2235;
-      border-radius: 3px;
-      overflow: hidden;
-    }
+    .progress-track { height: 6px; background: #1e2235; border-radius: 3px; overflow: hidden; }
     .progress-fill {
       height: 100%;
       background: linear-gradient(90deg, #4a7cf7, #7b5cf7);
@@ -177,17 +181,29 @@
       width: 0%;
     }
 
+    /* ── Toolbar above call list ── */
+    .list-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .list-toolbar-left { font-size: 0.75rem; color: #5a6080; text-transform: uppercase; letter-spacing: .8px; }
+    .list-toolbar-right { display: flex; gap: 8px; }
+
     /* ── Call list ── */
-    .call-list { display: flex; flex-direction: column; gap: 10px; }
+    .call-list { display: flex; flex-direction: column; gap: 8px; }
 
     .call-card {
       background: #111422;
       border: 1px solid #1e2235;
       border-radius: 8px;
-      padding: 14px 18px;
+      padding: 13px 16px;
       transition: border-color 0.2s;
     }
-    .call-card.active { border-color: #2a3f7f; background: #0f1428; }
+    .call-card.active { border-color: #2a4080; background: #0d1020; }
+    .call-card.ended  { border-color: #1a2e1a; }
+    .call-card.error  { border-color: #2b1515; }
 
     .call-top {
       display: flex;
@@ -197,45 +213,37 @@
     }
     .call-number {
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.93rem;
       color: #e0e4f8;
       font-family: 'Courier New', monospace;
       flex: 1;
-      min-width: 140px;
+      min-width: 130px;
     }
-    .call-meta {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+    .call-meta { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
 
     /* ── Badges ── */
     .badge {
-      padding: 3px 10px;
+      padding: 3px 9px;
       border-radius: 20px;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .5px;
       white-space: nowrap;
     }
-    .badge-pending    { background: #1a1e30; color: #5a6080; }
-    .badge-calling    { background: #0f1f4a; color: #4a7cf7; animation: pulse 1.2s ease-in-out infinite; }
-    .badge-in-progress{ background: #0f1f4a; color: #4a7cf7; }
-    .badge-ended      { background: #0d2b1a; color: #27ae60; }
-    .badge-ended-vm   { background: #2b1f0d; color: #f39c12; }
-    .badge-error      { background: #2b0d0d; color: #e74c3c; }
+    .badge-pending     { background: #1a1e30; color: #5a6080; }
+    .badge-calling     { background: #0f1f4a; color: #4a7cf7; animation: pulse 1.2s ease-in-out infinite; }
+    .badge-in-progress { background: #0f1f4a; color: #4a7cf7; }
+    .badge-ended       { background: #0d2b1a; color: #27ae60; }
+    .badge-ended-vm    { background: #2b1f0d; color: #f39c12; }
+    .badge-error       { background: #2b0d0d; color: #e74c3c; }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.55; }
-    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.45} }
 
     .sentiment {
       padding: 2px 8px;
       border-radius: 20px;
-      font-size: 0.68rem;
+      font-size: 0.66rem;
       font-weight: 600;
       text-transform: uppercase;
     }
@@ -244,29 +252,41 @@
     .sentiment-Neutral  { background: #1a1e30; color: #7a80a0; }
     .sentiment-Unknown  { background: #1a1e30; color: #5a6080; }
 
-    .icon-check    { color: #27ae60; font-size: 0.85rem; }
-    .icon-voicemail { color: #f39c12; font-size: 0.78rem; }
-    .duration      { font-size: 0.78rem; color: #5a6080; }
+    .icon-check    { color: #27ae60; font-size: 0.8rem; }
+    .icon-voicemail { color: #f39c12; font-size: 0.76rem; }
+    .duration      { font-size: 0.76rem; color: #5a6080; }
+
     .retry-btn {
-      background: none; border: 1px solid #3a3f60; color: #7a80a8;
-      border-radius: 5px; padding: 2px 8px; font-size: 0.75rem;
-      cursor: pointer; margin-left: 6px;
+      background: none;
+      border: 1px solid #3a3f60;
+      color: #7a80a8;
+      border-radius: 5px;
+      padding: 2px 9px;
+      font-size: 0.72rem;
+      cursor: pointer;
     }
     .retry-btn:hover { border-color: #5a80ff; color: #5a80ff; }
 
-    .call-summary {
+    /* ── Call detail section ── */
+    .call-detail {
       margin-top: 10px;
-      font-size: 0.82rem;
-      color: #7a80a8;
-      line-height: 1.55;
       padding-top: 10px;
       border-top: 1px solid #1a1e2e;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+      display: none;
     }
+    .call-detail.open { display: block; }
 
+    .call-summary-text {
+      font-size: 0.82rem;
+      color: #8a90b8;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    .call-disconn {
+      font-size: 0.75rem;
+      color: #5a6080;
+      font-style: italic;
+    }
     .recording-link {
       display: inline-block;
       margin-top: 8px;
@@ -275,6 +295,17 @@
       text-decoration: none;
     }
     .recording-link:hover { text-decoration: underline; }
+
+    .expand-btn {
+      background: none;
+      border: none;
+      color: #4a7cf7;
+      font-size: 0.75rem;
+      cursor: pointer;
+      padding: 0;
+      margin-top: 6px;
+    }
+    .expand-btn:hover { text-decoration: underline; }
 
     /* ── Empty state ── */
     .empty {
@@ -289,13 +320,18 @@
 
 <!-- Header -->
 <div class="header">
-  <div>
-    <div class="header h1" style="font-size:1.15rem;color:#fff;font-weight:600;">Outbound Campaign</div>
-    <div class="header-sub">Powered by Retell AI</div>
+  <div class="header-left">
+    <div class="live-dot" id="live-dot"></div>
+    <div>
+      <h1>Outbound Campaign</h1>
+      <div class="header-sub">Powered by Retell AI</div>
+    </div>
   </div>
   <div class="header-actions">
-    <button class="btn btn-ghost btn-sm" id="stop-btn" onclick="stopCampaign()" disabled>Stop</button>
-    <button class="btn btn-ghost btn-sm" id="reset-btn" onclick="resetCampaign()">Reset</button>
+    <button class="btn btn-warning btn-sm" id="pause-btn"  onclick="pauseCampaign()"  disabled>Pause</button>
+    <button class="btn btn-success btn-sm" id="resume-btn" onclick="resumeCampaign()" disabled>Resume</button>
+    <button class="btn btn-danger  btn-sm" id="stop-btn"   onclick="stopCampaign()"   disabled>Stop</button>
+    <button class="btn btn-ghost   btn-sm" id="reset-btn"  onclick="resetCampaign()">Reset</button>
   </div>
 </div>
 
@@ -305,42 +341,44 @@
   <div class="card">
     <div class="card-title">Phone Numbers</div>
     <textarea id="numbers-input"
+      oninput="updateCount()"
       placeholder="+12025551234&#10;+13105559876&#10;+917708445038&#10;&#10;One number per line. Include country code."></textarea>
+    <div class="num-count" id="num-count" style="margin-top:6px;">0 numbers</div>
     <div class="input-controls" style="margin-top:12px;">
       <button class="btn btn-ghost btn-sm" onclick="document.getElementById('csv-input').click()">
         Upload CSV
       </button>
       <input type="file" id="csv-input" accept=".csv,.txt" onchange="loadCSV(event)" />
       <div class="delay-wrap">
-        Delay between calls:
+        Delay:
         <input type="number" id="delay-input" value="2" min="0" max="60" />
         sec
       </div>
       <button class="btn btn-primary" id="start-btn" onclick="startCampaign()" style="margin-left:auto;">
-        ▶ Start Campaign
+        &#9654; Start Campaign
       </button>
     </div>
   </div>
 
-  <!-- Stats -->
+  <!-- Stats (hidden until campaign starts) -->
   <div class="stats-bar" id="stats-bar" style="display:none;">
     <div class="stat-item">
       <div class="stat-num" id="stat-total">0</div>
       <div class="stat-label">Total</div>
     </div>
-    <div class="stat-item calling">
+    <div class="stat-item s-calling">
       <div class="stat-num" id="stat-calling">0</div>
       <div class="stat-label">Calling</div>
     </div>
-    <div class="stat-item done">
+    <div class="stat-item s-done">
       <div class="stat-num" id="stat-done">0</div>
       <div class="stat-label">Done</div>
     </div>
-    <div class="stat-item voicemail">
+    <div class="stat-item s-voicemail">
       <div class="stat-num" id="stat-voicemail">0</div>
       <div class="stat-label">Voicemail</div>
     </div>
-    <div class="stat-item failed">
+    <div class="stat-item s-failed">
       <div class="stat-num" id="stat-failed">0</div>
       <div class="stat-label">Failed</div>
     </div>
@@ -350,7 +388,7 @@
     </div>
   </div>
 
-  <!-- Progress -->
+  <!-- Progress (hidden until campaign starts) -->
   <div class="progress-wrap" id="progress-wrap" style="display:none;">
     <div class="progress-header">
       <span id="progress-label">Campaign progress</span>
@@ -362,16 +400,33 @@
   </div>
 
   <!-- Call list -->
-  <div class="call-list" id="call-list">
-    <div class="empty" id="empty-state">Enter numbers above and click Start Campaign.</div>
+  <div id="list-section" style="display:none;">
+    <div class="list-toolbar">
+      <div class="list-toolbar-left" id="list-count">0 calls</div>
+      <div class="list-toolbar-right">
+        <button class="btn btn-ghost btn-sm" onclick="window.location='/export'">&#8595; Export CSV</button>
+      </div>
+    </div>
+    <div class="call-list" id="call-list"></div>
   </div>
+
+  <div class="empty" id="empty-state">Enter numbers above and click Start Campaign.</div>
 
 </div>
 
 <script>
-  let polling = null;
+  let polling  = null;
+  let expanded = {};   // track which cards are expanded by index
 
-  // ── CSV upload ────────────────────────────────────────────────────────────────
+  // ── Number counter ─────────────────────────────────────────────────────────
+  function updateCount() {
+    const lines = document.getElementById("numbers-input").value
+      .split("\n").map(l => l.trim()).filter(l => l);
+    const el = document.getElementById("num-count");
+    el.innerHTML = `<span>${lines.length}</span> number${lines.length !== 1 ? "s" : ""} loaded`;
+  }
+
+  // ── CSV upload ──────────────────────────────────────────────────────────────
   function loadCSV(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -379,12 +434,13 @@
     reader.onload = function(ev) {
       const lines = ev.target.result.split(/\r?\n/).map(l => l.trim()).filter(l => l);
       document.getElementById("numbers-input").value = lines.join("\n");
+      updateCount();
     };
     reader.readAsText(file);
     e.target.value = "";
   }
 
-  // ── Start ─────────────────────────────────────────────────────────────────────
+  // ── Start ───────────────────────────────────────────────────────────────────
   function startCampaign() {
     const raw     = document.getElementById("numbers-input").value;
     const numbers = raw.split("\n").map(n => n.trim()).filter(n => n);
@@ -392,7 +448,8 @@
 
     if (!numbers.length) { alert("Please enter at least one phone number."); return; }
 
-    setRunningState(true);
+    expanded = {};
+    setUIState("running");
 
     fetch("/start", {
       method:  "POST",
@@ -401,42 +458,85 @@
     })
     .then(r => r.json())
     .then(data => {
-      if (data.error) {
-        alert(data.error);
-        setRunningState(false);
-        return;
-      }
-      document.getElementById("stats-bar").style.display    = "flex";
-      document.getElementById("progress-wrap").style.display = "block";
-      document.getElementById("empty-state") && document.getElementById("empty-state").remove();
-      if (polling) clearInterval(polling);
-      polling = setInterval(fetchStatus, 3000);
-      fetchStatus();
+      if (data.error) { alert(data.error); setUIState("idle"); return; }
+      showCampaignUI();
+      startPolling();
     })
-    .catch(err => { alert("Failed: " + err); setRunningState(false); });
+    .catch(err => { alert("Failed: " + err); setUIState("idle"); });
   }
 
-  // ── Stop ──────────────────────────────────────────────────────────────────────
+  // ── Stop ────────────────────────────────────────────────────────────────────
   function stopCampaign() {
     fetch("/stop", { method: "POST" }).then(() => {
-      setRunningState(false);
+      setUIState("idle");
       fetchStatus();
     });
   }
 
-  // ── Reset ─────────────────────────────────────────────────────────────────────
-  function resetCampaign() {
-    if (polling) { clearInterval(polling); polling = null; }
-    fetch("/reset", { method: "POST" }).then(() => {
-      document.getElementById("call-list").innerHTML =
-        '<div class="empty" id="empty-state">Enter numbers above and click Start Campaign.</div>';
-      document.getElementById("stats-bar").style.display    = "none";
-      document.getElementById("progress-wrap").style.display = "none";
-      setRunningState(false);
+  // ── Pause ───────────────────────────────────────────────────────────────────
+  function pauseCampaign() {
+    fetch("/pause", { method: "POST" }).then(() => {
+      setUIState("paused");
+      fetchStatus();
     });
   }
 
-  // ── Poll status ───────────────────────────────────────────────────────────────
+  // ── Resume ──────────────────────────────────────────────────────────────────
+  function resumeCampaign() {
+    fetch("/resume", { method: "POST" }).then(() => {
+      setUIState("running");
+      fetchStatus();
+    });
+  }
+
+  // ── Reset ───────────────────────────────────────────────────────────────────
+  function resetCampaign() {
+    stopPolling();
+    fetch("/reset", { method: "POST" }).then(() => {
+      document.getElementById("stats-bar").style.display    = "none";
+      document.getElementById("progress-wrap").style.display = "none";
+      document.getElementById("list-section").style.display  = "none";
+      document.getElementById("empty-state").style.display   = "block";
+      document.getElementById("call-list").innerHTML          = "";
+      setUIState("idle");
+      expanded = {};
+    });
+  }
+
+  // ── Retry ───────────────────────────────────────────────────────────────────
+  function retryCall(idx) {
+    if (!confirm("Retry this call? It will dial once — no automatic repeat.")) return;
+    fetch(`/retry/${idx}`, { method: "POST" })
+      .then(r => r.json())
+      .then(d => { if (d.error) alert("Retry failed: " + d.error); })
+      .catch(() => alert("Retry request failed"));
+  }
+
+  // ── Toggle detail ───────────────────────────────────────────────────────────
+  function toggleDetail(idx) {
+    expanded[idx] = !expanded[idx];
+    const el = document.getElementById(`detail-${idx}`);
+    const btn = document.getElementById(`expand-btn-${idx}`);
+    if (!el) return;
+    if (expanded[idx]) {
+      el.classList.add("open");
+      if (btn) btn.textContent = "Hide details";
+    } else {
+      el.classList.remove("open");
+      if (btn) btn.textContent = "Show details";
+    }
+  }
+
+  // ── Polling ─────────────────────────────────────────────────────────────────
+  function startPolling() {
+    if (polling) clearInterval(polling);
+    polling = setInterval(fetchStatus, 3000);
+    fetchStatus();
+  }
+  function stopPolling() {
+    if (polling) { clearInterval(polling); polling = null; }
+  }
+
   function fetchStatus() {
     fetch("/status")
       .then(r => r.json())
@@ -444,20 +544,46 @@
         updateStats(data.stats);
         updateProgress(data.stats);
         renderCalls(data.calls);
+        document.getElementById("list-count").textContent =
+          `${(data.calls || []).length} call${(data.calls||[]).length !== 1 ? "s" : ""}`;
 
-        if (!data.running) {
-          if (polling) { clearInterval(polling); polling = null; }
-          setRunningState(false);
+        if (!data.running && !data.paused) {
+          stopPolling();
+          setUIState("idle");
+        } else if (data.paused) {
+          setUIState("paused");
         }
+
+        // Keep live dot synced
+        document.getElementById("live-dot").classList.toggle(
+          "visible", data.running && !data.paused
+        );
       });
   }
 
-  // ── UI helpers ────────────────────────────────────────────────────────────────
-  function setRunningState(running) {
-    document.getElementById("start-btn").disabled = running;
-    document.getElementById("stop-btn").disabled  = !running;
+  // ── UI state machine ────────────────────────────────────────────────────────
+  function setUIState(state) {
+    const start  = document.getElementById("start-btn");
+    const stop   = document.getElementById("stop-btn");
+    const pause  = document.getElementById("pause-btn");
+    const resume = document.getElementById("resume-btn");
+    const liveDot = document.getElementById("live-dot");
+
+    start.disabled  = (state === "running" || state === "paused");
+    stop.disabled   = (state === "idle");
+    pause.disabled  = (state !== "running");
+    resume.disabled = (state !== "paused");
+    liveDot.classList.toggle("visible", state === "running");
   }
 
+  function showCampaignUI() {
+    document.getElementById("stats-bar").style.display    = "flex";
+    document.getElementById("progress-wrap").style.display = "block";
+    document.getElementById("list-section").style.display  = "block";
+    document.getElementById("empty-state").style.display   = "none";
+  }
+
+  // ── Stats & progress ─────────────────────────────────────────────────────────
   function updateStats(s) {
     if (!s) return;
     document.getElementById("stat-total").textContent    = s.total;
@@ -471,67 +597,78 @@
   function updateProgress(s) {
     if (!s || !s.total) return;
     const finished = s.done + s.failed;
-    const pct      = Math.round(finished / s.total * 100);
-    document.getElementById("progress-fill").style.width = pct + "%";
-    document.getElementById("progress-pct").textContent  = pct + "%";
-    document.getElementById("progress-label").textContent =
-      `${finished} of ${s.total} calls completed`;
+    const pct = Math.round(finished / s.total * 100);
+    document.getElementById("progress-fill").style.width  = pct + "%";
+    document.getElementById("progress-pct").textContent   = pct + "%";
+    document.getElementById("progress-label").textContent = `${finished} of ${s.total} calls completed`;
   }
 
-  // ── Render call cards ─────────────────────────────────────────────────────────
+  // ── Render calls ─────────────────────────────────────────────────────────────
   function renderCalls(calls) {
     if (!calls || !calls.length) return;
     const list = document.getElementById("call-list");
+
+    // Preserve expanded state across re-renders
     list.innerHTML = calls.map(call => buildCard(call)).join("");
+    // Re-apply expanded state
+    calls.forEach(call => {
+      if (expanded[call.index]) {
+        const el = document.getElementById(`detail-${call.index}`);
+        if (el) el.classList.add("open");
+      }
+    });
   }
 
   function buildCard(call) {
+    const idx      = call.index;
     const isActive = call.status === "calling" || call.status === "in-progress";
+    const isDone   = call.status === "ended";
+    const isError  = call.status === "error";
+
+    // Card class
+    const cardClass = isActive ? "active" : isDone ? "ended" : isError ? "error" : "";
 
     // Badge
     let badgeClass, badgeLabel;
-    if (call.status === "calling")     { badgeClass = "badge-calling";     badgeLabel = "Calling"; }
-    else if (call.status === "in-progress") { badgeClass = "badge-in-progress"; badgeLabel = "In Progress"; }
-    else if (call.status === "ended")  {
+    if      (call.status === "calling")      { badgeClass = "badge-calling";     badgeLabel = "Calling..."; }
+    else if (call.status === "in-progress")  { badgeClass = "badge-in-progress"; badgeLabel = "In Progress"; }
+    else if (call.status === "ended")        {
       badgeClass = call.voicemail ? "badge-ended-vm" : "badge-ended";
       badgeLabel = call.voicemail ? "Voicemail" : "Ended";
     }
-    else if (call.status === "error")  { badgeClass = "badge-error";   badgeLabel = "Error"; }
-    else                               { badgeClass = "badge-pending"; badgeLabel = "Pending"; }
+    else if (call.status === "error")        { badgeClass = "badge-error";   badgeLabel = "Error"; }
+    else                                     { badgeClass = "badge-pending"; badgeLabel = "Pending"; }
 
-    // Sentiment pill
-    const sentiment = call.sentiment
-      ? `<span class="sentiment sentiment-${call.sentiment}">${call.sentiment}</span>` : "";
+    // Meta elements
+    const duration  = call.duration  ? `<span class="duration">${esc(call.duration)}</span>` : "";
+    const sentiment = call.sentiment ? `<span class="sentiment sentiment-${esc(call.sentiment)}">${esc(call.sentiment)}</span>` : "";
+    const checkmark = call.successful === true ? `<span class="icon-check">&#10003; Success</span>` : "";
+    const vmIcon    = call.voicemail           ? `<span class="icon-voicemail">&#128222; VM</span>` : "";
 
-    // Icons
-    const checkmark = call.successful === true
-      ? `<span class="icon-check">&#10003; Success</span>` : "";
-    const vmIcon = call.voicemail
-      ? `<span class="icon-voicemail">&#128222; VM</span>` : "";
+    // Retry: show on any non-active card except pending
+    const canRetry  = !isActive && call.status !== "pending";
+    const retryBtn  = canRetry
+      ? `<button class="retry-btn" onclick="retryCall(${idx})">&#8635; Retry</button>` : "";
 
-    // Duration
-    const duration = call.duration
-      ? `<span class="duration">${call.duration}</span>` : "";
-
-    // Summary
-    let summaryHtml = "";
+    // Detail section (summary + disconnect + recording)
+    let detailContent = "";
     if (call.summary) {
-      summaryHtml = `<div class="call-summary">${esc(call.summary)}</div>`;
-    } else if (call.status === "error" && call.summary === null) {
-      summaryHtml = "";
+      detailContent += `<div class="call-summary-text">${esc(call.summary)}</div>`;
+    }
+    if (call.disconnection_reason) {
+      detailContent += `<div class="call-disconn">Disconnect reason: ${esc(call.disconnection_reason)}</div>`;
+    }
+    if (call.recording_url) {
+      detailContent += `<a class="recording-link" href="${esc(call.recording_url)}" target="_blank">&#9654; Listen to recording</a>`;
     }
 
-    // Recording
-    const recHtml = call.recording_url
-      ? `<a class="recording-link" href="${esc(call.recording_url)}" target="_blank">&#9654; Listen to recording</a>` : "";
-
-    // Retry button — only show when call is done (not currently active)
-    const canRetry = !isActive;
-    const retryBtn = canRetry
-      ? `<button class="retry-btn" onclick="retryCall(${call.index})">&#8635; Retry</button>` : "";
+    const hasDetail = detailContent.length > 0;
+    const expandBtn = hasDetail
+      ? `<button class="expand-btn" id="expand-btn-${idx}" onclick="toggleDetail(${idx})">${expanded[idx] ? "Hide details" : "Show details"}</button>`
+      : "";
 
     return `
-      <div class="call-card ${isActive ? "active" : ""}">
+      <div class="call-card ${cardClass}">
         <div class="call-top">
           <span class="call-number">${esc(call.number)}</span>
           <div class="call-meta">
@@ -543,17 +680,11 @@
             ${retryBtn}
           </div>
         </div>
-        ${summaryHtml}
-        ${recHtml}
+        ${expandBtn}
+        <div class="call-detail" id="detail-${idx}">
+          ${detailContent}
+        </div>
       </div>`;
-  }
-
-  function retryCall(idx) {
-    if (!confirm("Retry this call?")) return;
-    fetch(`/retry/${idx}`, { method: "POST" })
-      .then(r => r.json())
-      .then(d => { if (d.error) alert("Retry failed: " + d.error); })
-      .catch(() => alert("Retry request failed"));
   }
 
   function esc(str) {
@@ -564,6 +695,9 @@
       .replace(/>/g,"&gt;")
       .replace(/"/g,"&quot;");
   }
+
+  // Init
+  updateCount();
 </script>
 </body>
 </html>
