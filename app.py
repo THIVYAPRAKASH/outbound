@@ -84,6 +84,8 @@ def _trigger_next_call():
         if idx >= len(campaign["numbers"]):
             campaign["running"] = False
             return
+        if campaign["calls"][idx]["status"] in ("calling", "in-progress"):
+            return
         to_number = campaign["numbers"][idx]
         campaign["calls"][idx]["status"] = "calling"
 
@@ -103,6 +105,9 @@ def _trigger_next_call():
             # We wait here — next call is triggered by the webhook
 
 
+TERMINAL_STATUSES = {"ended", "error", "failed"}
+
+
 @app.route("/webhook", methods=["POST"])
 def webhook():
     """Retell AI posts here after each call ends."""
@@ -114,21 +119,19 @@ def webhook():
     transcript  = data.get("transcript", "")
     summary     = analysis.get("summary") or (transcript[:300] if transcript else "No summary available")
 
+    trigger_next = False
     with campaign_lock:
-        # Find the call entry by call_id
-        matched_index = None
         for i, call in enumerate(campaign["calls"]):
             if call.get("call_id") == call_id:
-                matched_index = i
+                campaign["calls"][i]["status"] = call_status or "ended"
+                if call_status in TERMINAL_STATUSES:
+                    campaign["calls"][i]["summary"] = summary
+                    campaign["current_index"] = i + 1
+                    trigger_next = True
                 break
 
-        if matched_index is not None:
-            campaign["calls"][matched_index]["status"] = call_status or "ended"
-            campaign["calls"][matched_index]["summary"] = summary
-            campaign["current_index"] = matched_index + 1
-
-    # Trigger next call outside lock
-    threading.Thread(target=_trigger_next_call, daemon=True).start()
+    if trigger_next:
+        threading.Thread(target=_trigger_next_call, daemon=True).start()
 
     return jsonify({"received": True})
 
