@@ -7,426 +7,675 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --bg:        #080a12;
+      --surface:   #0e1120;
+      --surface2:  #131629;
+      --border:    #1c2040;
+      --border2:   #232748;
+      --text:      #c8cee8;
+      --text-dim:  #5a628a;
+      --text-mute: #3a4060;
+      --blue:      #4f7fff;
+      --blue-dim:  #1a2d5a;
+      --green:     #22c55e;
+      --green-dim: #0d2e1e;
+      --red:       #ef4444;
+      --red-dim:   #2e0d0d;
+      --amber:     #f59e0b;
+      --amber-dim: #2e1e0d;
+      --purple:    #a855f7;
+    }
+
     body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: #0b0d14;
-      color: #d4d8e8;
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
     }
 
-    /* ── Header ── */
-    .header {
+    /* ── Header ─────────────────────────────────────────────────────────────── */
+    .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 28px;
-      background: #111422;
-      border-bottom: 1px solid #1e2235;
+      padding: 0 32px;
+      height: 58px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 200;
     }
-    .header-left { display: flex; align-items: center; gap: 12px; }
-    .header h1 { font-size: 1.1rem; color: #fff; font-weight: 600; }
-    .header-sub { font-size: 0.75rem; color: #5a6080; margin-top: 2px; }
-    .live-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #27ae60;
-      animation: livepulse 1.4s ease-in-out infinite;
-      display: none;
-    }
-    .live-dot.visible { display: block; }
-    @keyframes livepulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.3)} }
-
-    .header-actions { display: flex; gap: 8px; align-items: center; }
-
-    /* ── Buttons ── */
-    .btn {
-      padding: 7px 16px;
-      border: none;
-      border-radius: 6px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.15s, background 0.15s;
-      white-space: nowrap;
-    }
-    .btn:disabled { opacity: 0.3; cursor: not-allowed; }
-    .btn-primary { background: #4a7cf7; color: #fff; }
-    .btn-primary:hover:not(:disabled) { background: #3a6ce6; }
-    .btn-danger  { background: #c0392b; color: #fff; }
-    .btn-danger:hover:not(:disabled)  { background: #a93226; }
-    .btn-warning { background: #e67e22; color: #fff; }
-    .btn-warning:hover:not(:disabled) { background: #d35400; }
-    .btn-success { background: #27ae60; color: #fff; }
-    .btn-success:hover:not(:disabled) { background: #219a52; }
-    .btn-ghost   { background: #1e2235; color: #9aa0c0; border: 1px solid #2a2f4a; }
-    .btn-ghost:hover:not(:disabled)   { background: #252a42; }
-    .btn-sm { padding: 5px 12px; font-size: 0.78rem; }
-
-    /* ── Main layout ── */
-    .main { max-width: 900px; margin: 0 auto; padding: 24px 20px 80px; }
-
-    /* ── Card ── */
-    .card {
-      background: #111422;
-      border: 1px solid #1e2235;
-      border-radius: 10px;
-      padding: 20px 22px;
-      margin-bottom: 16px;
-    }
-    .card-title {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 1.1px;
-      color: #5a6080;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-
-    /* ── Input section ── */
-    .input-row { display: flex; gap: 12px; align-items: flex-start; }
-    .input-col { flex: 1; display: flex; flex-direction: column; gap: 10px; }
-    textarea {
-      width: 100%;
-      height: 100px;
-      background: #0b0d14;
-      border: 1px solid #1e2235;
-      border-radius: 6px;
-      color: #d4d8e8;
-      padding: 10px 12px;
-      font-size: 0.85rem;
-      resize: vertical;
-      outline: none;
-      font-family: 'Courier New', monospace;
-      line-height: 1.6;
-    }
-    textarea:focus { border-color: #4a7cf7; }
-    textarea::placeholder { color: #3a3f60; }
-
-    .num-count { font-size: 0.75rem; color: #5a6080; }
-    .num-count span { color: #4a7cf7; font-weight: 600; }
-
-    .input-controls {
+    .topbar-left {
       display: flex;
       align-items: center;
       gap: 14px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #4f7fff, #a855f7);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+    }
+    .logo-text { font-size: 0.95rem; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+    .logo-sub  { font-size: 0.7rem; color: var(--text-dim); margin-top: 1px; }
+
+    .status-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+    .status-chip .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--text-mute);
+    }
+    .status-chip.live   { background: #0d2e1e; border-color: #166534; color: var(--green); }
+    .status-chip.live .dot { background: var(--green); animation: livepulse 1.2s ease-in-out infinite; }
+    .status-chip.paused { background: #2e1e0d; border-color: #92400e; color: var(--amber); }
+    .status-chip.paused .dot { background: var(--amber); }
+    @keyframes livepulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.4)} }
+
+    .topbar-right { display: flex; gap: 8px; align-items: center; }
+
+    /* ── Buttons ─────────────────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border: none;
+      border-radius: 7px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+      letter-spacing: .2px;
+    }
+    .btn:disabled { opacity: 0.28; cursor: not-allowed; pointer-events: none; }
+    .btn-primary  { background: var(--blue);  color: #fff; }
+    .btn-primary:hover  { background: #3d6ef0; }
+    .btn-danger   { background: #dc2626; color: #fff; }
+    .btn-danger:hover   { background: #b91c1c; }
+    .btn-warning  { background: #d97706; color: #fff; }
+    .btn-warning:hover  { background: #b45309; }
+    .btn-success  { background: #16a34a; color: #fff; }
+    .btn-success:hover  { background: #15803d; }
+    .btn-ghost    { background: var(--surface2); color: var(--text-dim); border: 1px solid var(--border); }
+    .btn-ghost:hover    { background: var(--border); color: var(--text); }
+    .btn-lg { padding: 10px 20px; font-size: 0.9rem; border-radius: 8px; }
+
+    /* ── Main ────────────────────────────────────────────────────────────────── */
+    .main {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 28px 24px 100px;
+    }
+
+    /* ── Section label ───────────────────────────────────────────────────────── */
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+    }
+
+    /* ── Input panel ─────────────────────────────────────────────────────────── */
+    .input-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin-bottom: 20px;
+    }
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: start;
+    }
+    textarea {
+      width: 100%;
+      height: 110px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      padding: 10px 13px;
+      font-size: 0.84rem;
+      resize: vertical;
+      outline: none;
+      font-family: 'Courier New', monospace;
+      line-height: 1.7;
+      transition: border-color 0.15s;
+    }
+    textarea:focus { border-color: var(--blue); }
+    textarea::placeholder { color: var(--text-mute); }
+
+    .input-side {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 200px;
+    }
+    .num-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--blue-dim);
+      border: 1px solid #2a4080;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      color: var(--blue);
+      font-weight: 600;
+    }
+    .input-footer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
       flex-wrap: wrap;
     }
-    .delay-wrap {
+    .delay-group {
       display: flex;
       align-items: center;
       gap: 7px;
-      font-size: 0.82rem;
-      color: #6a70a0;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 6px 12px;
     }
-    .delay-wrap input[type=number] {
-      width: 56px;
-      background: #0b0d14;
-      border: 1px solid #1e2235;
-      border-radius: 6px;
-      color: #d4d8e8;
-      padding: 5px 8px;
+    .delay-group input[type=number] {
+      width: 48px;
+      background: transparent;
+      border: none;
+      color: var(--text);
       font-size: 0.85rem;
       outline: none;
       text-align: center;
+      font-weight: 600;
     }
-    .delay-wrap input:focus { border-color: #4a7cf7; }
     #csv-input { display: none; }
 
-    /* ── Stats bar ── */
-    .stats-bar {
-      display: flex;
-      background: #111422;
-      border: 1px solid #1e2235;
+    /* ── Stat cards ──────────────────────────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-    .stat-item {
-      flex: 1;
-      padding: 14px 0;
+      padding: 16px 14px;
       text-align: center;
-      border-right: 1px solid #1e2235;
+      transition: border-color 0.2s;
     }
-    .stat-item:last-child { border-right: none; }
-    .stat-num { font-size: 1.5rem; font-weight: 700; color: #fff; line-height: 1; }
-    .stat-label { font-size: 0.68rem; color: #5a6080; text-transform: uppercase; letter-spacing: .8px; margin-top: 5px; }
-    .stat-item.s-calling  .stat-num { color: #4a7cf7; }
-    .stat-item.s-done     .stat-num { color: #27ae60; }
-    .stat-item.s-failed   .stat-num { color: #e74c3c; }
-    .stat-item.s-voicemail .stat-num { color: #f39c12; }
+    .stat-icon { font-size: 1.1rem; margin-bottom: 6px; }
+    .stat-num  { font-size: 1.6rem; font-weight: 800; color: #fff; line-height: 1; }
+    .stat-label{ font-size: 0.63rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: .8px; margin-top: 5px; }
+    .stat-card.s-calling  { border-color: #2a4080; }
+    .stat-card.s-calling  .stat-num { color: var(--blue); }
+    .stat-card.s-done     { border-color: #166534; }
+    .stat-card.s-done     .stat-num { color: var(--green); }
+    .stat-card.s-failed   { border-color: #7f1d1d; }
+    .stat-card.s-failed   .stat-num { color: var(--red); }
+    .stat-card.s-voicemail{ border-color: #78350f; }
+    .stat-card.s-voicemail .stat-num { color: var(--amber); }
+    .stat-card.s-pending  .stat-num { color: var(--text-dim); }
 
-    /* ── Progress ── */
-    .progress-wrap {
-      background: #111422;
-      border: 1px solid #1e2235;
+    /* ── Progress ────────────────────────────────────────────────────────────── */
+    .progress-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 10px;
       padding: 14px 20px;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
     .progress-header {
       display: flex;
       justify-content: space-between;
-      font-size: 0.78rem;
-      color: #5a6080;
+      align-items: center;
       margin-bottom: 10px;
     }
-    .progress-track { height: 6px; background: #1e2235; border-radius: 3px; overflow: hidden; }
-    .progress-fill {
+    .progress-label { font-size: 0.8rem; color: var(--text-dim); }
+    .progress-pct   { font-size: 0.9rem; font-weight: 700; color: #fff; }
+    .progress-track { height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+    .progress-fill  {
       height: 100%;
-      background: linear-gradient(90deg, #4a7cf7, #7b5cf7);
-      border-radius: 3px;
-      transition: width 0.5s ease;
+      background: linear-gradient(90deg, var(--blue), var(--purple));
+      border-radius: 4px;
+      transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
       width: 0%;
     }
+    .progress-sub {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      font-size: 0.72rem;
+      color: var(--text-mute);
+    }
+    .progress-sub span { color: var(--text-dim); font-weight: 600; }
 
-    /* ── Toolbar above call list ── */
+    /* ── Call list toolbar ───────────────────────────────────────────────────── */
     .list-toolbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      gap: 12px;
+      flex-wrap: wrap;
     }
-    .list-toolbar-left { font-size: 0.75rem; color: #5a6080; text-transform: uppercase; letter-spacing: .8px; }
-    .list-toolbar-right { display: flex; gap: 8px; }
+    .filter-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-dim);
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .pill:hover { border-color: var(--border2); color: var(--text); }
+    .pill.active { background: var(--blue-dim); border-color: #2a4080; color: var(--blue); }
 
-    /* ── Call list ── */
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 6px 12px;
+    }
+    .search-box input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 0.8rem;
+      width: 160px;
+    }
+    .search-box input::placeholder { color: var(--text-mute); }
+    .search-icon { color: var(--text-mute); font-size: 0.8rem; }
+
+    .toolbar-right { display: flex; gap: 8px; align-items: center; }
+    .list-count { font-size: 0.75rem; color: var(--text-dim); }
+
+    /* ── Call cards ──────────────────────────────────────────────────────────── */
     .call-list { display: flex; flex-direction: column; gap: 8px; }
 
     .call-card {
-      background: #111422;
-      border: 1px solid #1e2235;
-      border-radius: 8px;
-      padding: 13px 16px;
-      transition: border-color 0.2s;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .call-card.active { border-color: #2a4080; background: #0d1020; }
-    .call-card.ended  { border-color: #1a2e1a; }
-    .call-card.error  { border-color: #2b1515; }
+    .call-card.status-calling,
+    .call-card.status-in-progress {
+      border-color: #2a4080;
+      box-shadow: 0 0 0 1px #2a4080, 0 0 20px rgba(79,127,255,0.08);
+      background: #080e1e;
+    }
+    .call-card.status-ended   { border-color: #166534; }
+    .call-card.status-error   { border-color: #7f1d1d; }
+    .call-card.hidden         { display: none; }
 
-    .call-top {
+    .card-row1 {
       display: flex;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
     }
-    .call-number {
+    .call-idx {
+      font-size: 0.68rem;
+      color: var(--text-mute);
       font-weight: 600;
-      font-size: 0.93rem;
-      color: #e0e4f8;
+      min-width: 28px;
+    }
+    .call-number {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: #e8ecff;
       font-family: 'Courier New', monospace;
       flex: 1;
-      min-width: 130px;
+      min-width: 140px;
     }
-    .call-meta { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+    .card-meta { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-left: auto; }
 
-    /* ── Badges ── */
+    /* ── Badges ──────────────────────────────────────────────────────────────── */
     .badge {
-      padding: 3px 9px;
+      padding: 3px 10px;
       border-radius: 20px;
-      font-size: 0.68rem;
+      font-size: 0.67rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .5px;
       white-space: nowrap;
     }
-    .badge-pending     { background: #1a1e30; color: #5a6080; }
-    .badge-calling     { background: #0f1f4a; color: #4a7cf7; animation: pulse 1.2s ease-in-out infinite; }
-    .badge-in-progress { background: #0f1f4a; color: #4a7cf7; }
-    .badge-ended       { background: #0d2b1a; color: #27ae60; }
-    .badge-ended-vm    { background: #2b1f0d; color: #f39c12; }
-    .badge-error       { background: #2b0d0d; color: #e74c3c; }
+    .badge-pending     { background: #12152a; color: var(--text-mute); border: 1px solid var(--border); }
+    .badge-calling     { background: var(--blue-dim); color: var(--blue); border: 1px solid #2a4080; animation: blink 1.1s ease-in-out infinite; }
+    .badge-in-progress { background: var(--blue-dim); color: var(--blue); border: 1px solid #2a4080; }
+    .badge-ended       { background: var(--green-dim); color: var(--green); border: 1px solid #166534; }
+    .badge-voicemail   { background: var(--amber-dim); color: var(--amber); border: 1px solid #78350f; }
+    .badge-error       { background: var(--red-dim);   color: var(--red);   border: 1px solid #7f1d1d; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
 
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.45} }
-
-    .sentiment {
-      padding: 2px 8px;
+    .sentiment-pill {
+      padding: 2px 9px;
       border-radius: 20px;
       font-size: 0.66rem;
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
+      letter-spacing: .3px;
     }
-    .sentiment-Positive { background: #0d2b1a; color: #27ae60; }
-    .sentiment-Negative { background: #2b0d0d; color: #e74c3c; }
-    .sentiment-Neutral  { background: #1a1e30; color: #7a80a0; }
-    .sentiment-Unknown  { background: #1a1e30; color: #5a6080; }
+    .s-Positive { background: var(--green-dim); color: var(--green); }
+    .s-Negative { background: var(--red-dim);   color: var(--red);   }
+    .s-Neutral  { background: #12152a;           color: var(--text-dim); }
+    .s-Unknown  { background: #12152a;           color: var(--text-mute); }
 
-    .icon-check    { color: #27ae60; font-size: 0.8rem; }
-    .icon-voicemail { color: #f39c12; font-size: 0.76rem; }
-    .duration      { font-size: 0.76rem; color: #5a6080; }
+    .tag-vm      { background: var(--amber-dim); color: var(--amber); padding: 2px 8px; border-radius: 20px; font-size: 0.66rem; font-weight: 700; }
+    .tag-success { color: var(--green); font-size: 0.78rem; font-weight: 700; }
+    .duration    { font-size: 0.75rem; color: var(--text-dim); font-variant-numeric: tabular-nums; }
 
     .retry-btn {
       background: none;
-      border: 1px solid #3a3f60;
-      color: #7a80a8;
+      border: 1px solid var(--border2);
+      color: var(--text-mute);
       border-radius: 5px;
-      padding: 2px 9px;
-      font-size: 0.72rem;
+      padding: 3px 9px;
+      font-size: 0.7rem;
+      font-weight: 600;
       cursor: pointer;
+      transition: all 0.15s;
     }
-    .retry-btn:hover { border-color: #5a80ff; color: #5a80ff; }
+    .retry-btn:hover { border-color: var(--blue); color: var(--blue); }
 
-    /* ── Call detail section ── */
-    .call-detail {
+    /* ── Card detail ─────────────────────────────────────────────────────────── */
+    .card-detail {
       margin-top: 10px;
       padding-top: 10px;
-      border-top: 1px solid #1a1e2e;
-      display: none;
+      border-top: 1px solid var(--border);
     }
-    .call-detail.open { display: block; }
-
-    .call-summary-text {
-      font-size: 0.82rem;
-      color: #8a90b8;
-      line-height: 1.6;
+    .summary-text {
+      font-size: 0.81rem;
+      color: #8a92c0;
+      line-height: 1.65;
       margin-bottom: 8px;
     }
-    .call-disconn {
-      font-size: 0.75rem;
-      color: #5a6080;
-      font-style: italic;
+    .disconn-reason {
+      font-size: 0.72rem;
+      color: var(--text-mute);
+      margin-bottom: 6px;
     }
-    .recording-link {
-      display: inline-block;
-      margin-top: 8px;
-      font-size: 0.75rem;
-      color: #4a7cf7;
+    .recording-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      background: var(--blue-dim);
+      border: 1px solid #2a4080;
+      border-radius: 6px;
+      color: var(--blue);
       text-decoration: none;
+      font-size: 0.73rem;
+      font-weight: 600;
+      transition: background 0.15s;
     }
-    .recording-link:hover { text-decoration: underline; }
+    .recording-btn:hover { background: #1e3570; }
 
+    .expand-row {
+      margin-top: 8px;
+    }
     .expand-btn {
       background: none;
       border: none;
-      color: #4a7cf7;
-      font-size: 0.75rem;
+      color: var(--blue);
+      font-size: 0.73rem;
       cursor: pointer;
       padding: 0;
-      margin-top: 6px;
+      font-weight: 600;
     }
     .expand-btn:hover { text-decoration: underline; }
 
-    /* ── Empty state ── */
-    .empty {
+    /* ── Empty / Hidden states ───────────────────────────────────────────────── */
+    .empty-state {
       text-align: center;
-      padding: 48px 0;
-      color: #3a3f60;
-      font-size: 0.88rem;
+      padding: 60px 0;
+      color: var(--text-mute);
+    }
+    .empty-icon { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.4; }
+    .empty-text { font-size: 0.88rem; }
+
+    /* ── Toast ───────────────────────────────────────────────────────────────── */
+    #toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+      animation: toastIn 0.25s ease, toastOut 0.3s ease 2.4s forwards;
+      pointer-events: none;
+    }
+    .toast.success { border-color: #166534; color: var(--green); }
+    .toast.error   { border-color: #7f1d1d; color: var(--red); }
+    @keyframes toastIn  { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes toastOut { from{opacity:1} to{opacity:0;transform:translateY(8px)} }
+
+    /* ── Responsive ──────────────────────────────────────────────────────────── */
+    @media (max-width: 700px) {
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+      .topbar { padding: 0 16px; }
+      .main { padding: 16px 12px 80px; }
     }
   </style>
 </head>
 <body>
 
-<!-- Header -->
-<div class="header">
-  <div class="header-left">
-    <div class="live-dot" id="live-dot"></div>
-    <div>
-      <h1>Outbound Campaign</h1>
-      <div class="header-sub">Powered by Retell AI</div>
+<!-- Top bar -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo">
+      <div class="logo-icon">&#128222;</div>
+      <div>
+        <div class="logo-text">Outbound Campaign</div>
+        <div class="logo-sub">Powered by Retell AI</div>
+      </div>
+    </div>
+    <div class="status-chip" id="status-chip">
+      <div class="dot"></div>
+      <span id="status-label">Idle</span>
     </div>
   </div>
-  <div class="header-actions">
-    <button class="btn btn-warning btn-sm" id="pause-btn"  onclick="pauseCampaign()"  disabled>Pause</button>
-    <button class="btn btn-success btn-sm" id="resume-btn" onclick="resumeCampaign()" disabled>Resume</button>
-    <button class="btn btn-danger  btn-sm" id="stop-btn"   onclick="stopCampaign()"   disabled>Stop</button>
-    <button class="btn btn-ghost   btn-sm" id="reset-btn"  onclick="resetCampaign()">Reset</button>
+  <div class="topbar-right">
+    <button class="btn btn-warning" id="pause-btn"  onclick="pauseCampaign()"  disabled>&#9646;&#9646; Pause</button>
+    <button class="btn btn-success" id="resume-btn" onclick="resumeCampaign()" disabled>&#9654; Resume</button>
+    <button class="btn btn-danger"  id="stop-btn"   onclick="stopCampaign()"   disabled>&#9632; Stop</button>
+    <button class="btn btn-ghost"   id="reset-btn"  onclick="resetCampaign()">&#8635; Reset</button>
+    <button class="btn btn-ghost"   onclick="window.location='/export'">&#8595; Export</button>
   </div>
 </div>
 
 <div class="main">
 
-  <!-- Input -->
-  <div class="card">
-    <div class="card-title">Phone Numbers</div>
-    <textarea id="numbers-input"
-      oninput="updateCount()"
-      placeholder="+12025551234&#10;+13105559876&#10;+917708445038&#10;&#10;One number per line. Include country code."></textarea>
-    <div class="num-count" id="num-count" style="margin-top:6px;">0 numbers</div>
-    <div class="input-controls" style="margin-top:12px;">
-      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('csv-input').click()">
-        Upload CSV
-      </button>
-      <input type="file" id="csv-input" accept=".csv,.txt" onchange="loadCSV(event)" />
-      <div class="delay-wrap">
-        Delay:
-        <input type="number" id="delay-input" value="2" min="0" max="60" />
+  <!-- Input panel -->
+  <div class="input-panel">
+    <div class="section-label">Phone Numbers</div>
+    <div class="input-grid">
+      <textarea id="numbers-input"
+        oninput="updateCount()"
+        placeholder="+12025551234&#10;+13105559876&#10;+917708445038&#10;&#10;One number per line. Include country code."></textarea>
+      <div class="input-side">
+        <div class="num-badge">
+          <span>&#9776;</span>
+          <span id="num-count">0 numbers</span>
+        </div>
+        <button class="btn btn-ghost" onclick="document.getElementById('csv-input').click()">
+          &#8593; Upload CSV
+        </button>
+        <input type="file" id="csv-input" accept=".csv,.txt" onchange="loadCSV(event)" />
+      </div>
+    </div>
+    <div class="input-footer">
+      <div class="delay-group">
+        &#9201; Delay between calls:
+        <input type="number" id="delay-input" value="3" min="1" max="120" />
         sec
       </div>
-      <button class="btn btn-primary" id="start-btn" onclick="startCampaign()" style="margin-left:auto;">
+      <button class="btn btn-primary btn-lg" id="start-btn" onclick="startCampaign()" style="margin-left:auto;">
         &#9654; Start Campaign
       </button>
     </div>
   </div>
 
-  <!-- Stats (hidden until campaign starts) -->
-  <div class="stats-bar" id="stats-bar" style="display:none;">
-    <div class="stat-item">
+  <!-- Stats grid (hidden until campaign) -->
+  <div class="stats-grid" id="stats-grid" style="display:none;">
+    <div class="stat-card">
+      <div class="stat-icon">&#128222;</div>
       <div class="stat-num" id="stat-total">0</div>
       <div class="stat-label">Total</div>
     </div>
-    <div class="stat-item s-calling">
+    <div class="stat-card s-calling">
+      <div class="stat-icon">&#128276;</div>
       <div class="stat-num" id="stat-calling">0</div>
       <div class="stat-label">Calling</div>
     </div>
-    <div class="stat-item s-done">
+    <div class="stat-card s-done">
+      <div class="stat-icon">&#10003;</div>
       <div class="stat-num" id="stat-done">0</div>
       <div class="stat-label">Done</div>
     </div>
-    <div class="stat-item s-voicemail">
+    <div class="stat-card s-voicemail">
+      <div class="stat-icon">&#128233;</div>
       <div class="stat-num" id="stat-voicemail">0</div>
       <div class="stat-label">Voicemail</div>
     </div>
-    <div class="stat-item s-failed">
+    <div class="stat-card s-failed">
+      <div class="stat-icon">&#10007;</div>
       <div class="stat-num" id="stat-failed">0</div>
       <div class="stat-label">Failed</div>
     </div>
-    <div class="stat-item">
+    <div class="stat-card s-pending">
+      <div class="stat-icon">&#128336;</div>
       <div class="stat-num" id="stat-pending">0</div>
       <div class="stat-label">Pending</div>
     </div>
   </div>
 
-  <!-- Progress (hidden until campaign starts) -->
-  <div class="progress-wrap" id="progress-wrap" style="display:none;">
+  <!-- Progress (hidden until campaign) -->
+  <div class="progress-panel" id="progress-panel" style="display:none;">
     <div class="progress-header">
-      <span id="progress-label">Campaign progress</span>
-      <span id="progress-pct">0%</span>
+      <div class="progress-label" id="progress-label">Campaign in progress</div>
+      <div class="progress-pct"  id="progress-pct">0%</div>
     </div>
     <div class="progress-track">
       <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="progress-sub">
+      Completed: <span id="prog-done">0</span> &nbsp;&bull;&nbsp;
+      Remaining: <span id="prog-left">0</span> &nbsp;&bull;&nbsp;
+      Failed: <span id="prog-fail">0</span>
     </div>
   </div>
 
   <!-- Call list -->
   <div id="list-section" style="display:none;">
     <div class="list-toolbar">
-      <div class="list-toolbar-left" id="list-count">0 calls</div>
-      <div class="list-toolbar-right">
-        <button class="btn btn-ghost btn-sm" onclick="window.location='/export'">&#8595; Export CSV</button>
+      <div class="filter-pills" id="filter-pills">
+        <div class="pill active" data-filter="all" onclick="setFilter('all')">All</div>
+        <div class="pill" data-filter="pending"     onclick="setFilter('pending')">Pending</div>
+        <div class="pill" data-filter="calling"     onclick="setFilter('calling')">Calling</div>
+        <div class="pill" data-filter="ended"       onclick="setFilter('ended')">Done</div>
+        <div class="pill" data-filter="voicemail"   onclick="setFilter('voicemail')">Voicemail</div>
+        <div class="pill" data-filter="error"       onclick="setFilter('error')">Failed</div>
+      </div>
+      <div class="toolbar-right">
+        <div class="search-box">
+          <span class="search-icon">&#128269;</span>
+          <input type="text" id="search-input" placeholder="Search number..." oninput="applyFilters()" />
+        </div>
+        <span class="list-count" id="list-count"></span>
       </div>
     </div>
     <div class="call-list" id="call-list"></div>
   </div>
 
-  <div class="empty" id="empty-state">Enter numbers above and click Start Campaign.</div>
+  <!-- Empty state -->
+  <div class="empty-state" id="empty-state">
+    <div class="empty-icon">&#128222;</div>
+    <div class="empty-text">Enter phone numbers above and hit <strong>Start Campaign</strong></div>
+  </div>
 
 </div>
 
-<script>
-  let polling  = null;
-  let expanded = {};   // track which cards are expanded by index
+<!-- Toast container -->
+<div id="toast-container"></div>
 
-  // ── Number counter ─────────────────────────────────────────────────────────
+<script>
+  let polling    = null;
+  let expanded   = {};
+  let activeFilter = "all";
+  let allCalls   = [];
+
+  // ── Count ─────────────────────────────────────────────────────────────────
   function updateCount() {
-    const lines = document.getElementById("numbers-input").value
-      .split("\n").map(l => l.trim()).filter(l => l);
+    const lines = nums();
     const el = document.getElementById("num-count");
-    el.innerHTML = `<span>${lines.length}</span> number${lines.length !== 1 ? "s" : ""} loaded`;
+    el.textContent = `${lines.length} number${lines.length !== 1 ? "s" : ""}`;
+  }
+  function nums() {
+    return document.getElementById("numbers-input").value
+      .split("\n").map(l => l.trim()).filter(l => l);
   }
 
-  // ── CSV upload ──────────────────────────────────────────────────────────────
+  // ── CSV ───────────────────────────────────────────────────────────────────
   function loadCSV(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -435,21 +684,21 @@
       const lines = ev.target.result.split(/\r?\n/).map(l => l.trim()).filter(l => l);
       document.getElementById("numbers-input").value = lines.join("\n");
       updateCount();
+      toast(`Loaded ${lines.length} numbers from CSV`, "success");
     };
     reader.readAsText(file);
     e.target.value = "";
   }
 
-  // ── Start ───────────────────────────────────────────────────────────────────
+  // ── Start ─────────────────────────────────────────────────────────────────
   function startCampaign() {
-    const raw     = document.getElementById("numbers-input").value;
-    const numbers = raw.split("\n").map(n => n.trim()).filter(n => n);
-    const delay   = parseInt(document.getElementById("delay-input").value) || 2;
-
-    if (!numbers.length) { alert("Please enter at least one phone number."); return; }
+    const numbers = nums();
+    const delay   = parseInt(document.getElementById("delay-input").value) || 3;
+    if (!numbers.length) { toast("Enter at least one phone number", "error"); return; }
 
     expanded = {};
     setUIState("running");
+    showCampaignUI();
 
     fetch("/start", {
       method:  "POST",
@@ -458,132 +707,157 @@
     })
     .then(r => r.json())
     .then(data => {
-      if (data.error) { alert(data.error); setUIState("idle"); return; }
-      showCampaignUI();
+      if (data.error) { toast(data.error, "error"); setUIState("idle"); return; }
+      toast(`Campaign started — ${numbers.length} numbers queued`, "success");
       startPolling();
     })
-    .catch(err => { alert("Failed: " + err); setUIState("idle"); });
+    .catch(() => { toast("Failed to start campaign", "error"); setUIState("idle"); });
   }
 
-  // ── Stop ────────────────────────────────────────────────────────────────────
+  // ── Controls ──────────────────────────────────────────────────────────────
   function stopCampaign() {
     fetch("/stop", { method: "POST" }).then(() => {
       setUIState("idle");
+      toast("Campaign stopped");
       fetchStatus();
     });
   }
-
-  // ── Pause ───────────────────────────────────────────────────────────────────
   function pauseCampaign() {
     fetch("/pause", { method: "POST" }).then(() => {
       setUIState("paused");
+      toast("Campaign paused");
       fetchStatus();
     });
   }
-
-  // ── Resume ──────────────────────────────────────────────────────────────────
   function resumeCampaign() {
     fetch("/resume", { method: "POST" }).then(() => {
       setUIState("running");
+      toast("Campaign resumed", "success");
       fetchStatus();
     });
   }
-
-  // ── Reset ───────────────────────────────────────────────────────────────────
   function resetCampaign() {
     stopPolling();
     fetch("/reset", { method: "POST" }).then(() => {
-      document.getElementById("stats-bar").style.display    = "none";
-      document.getElementById("progress-wrap").style.display = "none";
-      document.getElementById("list-section").style.display  = "none";
-      document.getElementById("empty-state").style.display   = "block";
-      document.getElementById("call-list").innerHTML          = "";
+      hideCampaignUI();
       setUIState("idle");
       expanded = {};
+      allCalls = [];
+      document.getElementById("call-list").innerHTML = "";
+      document.getElementById("search-input").value  = "";
+      toast("Campaign reset");
     });
   }
-
-  // ── Retry ───────────────────────────────────────────────────────────────────
   function retryCall(idx) {
-    if (!confirm("Retry this call? It will dial once — no automatic repeat.")) return;
+    if (!confirm(`Retry #${idx + 1}? It will dial exactly once.`)) return;
     fetch(`/retry/${idx}`, { method: "POST" })
       .then(r => r.json())
-      .then(d => { if (d.error) alert("Retry failed: " + d.error); })
-      .catch(() => alert("Retry request failed"));
+      .then(d => {
+        if (d.error) toast("Retry failed: " + d.error, "error");
+        else toast("Retrying call #" + (idx + 1), "success");
+      })
+      .catch(() => toast("Retry request failed", "error"));
   }
 
-  // ── Toggle detail ───────────────────────────────────────────────────────────
+  // ── Filter ────────────────────────────────────────────────────────────────
+  function setFilter(f) {
+    activeFilter = f;
+    document.querySelectorAll(".pill").forEach(p => {
+      p.classList.toggle("active", p.dataset.filter === f);
+    });
+    applyFilters();
+  }
+  function applyFilters() {
+    const q = (document.getElementById("search-input").value || "").trim().toLowerCase();
+    let visible = 0;
+    allCalls.forEach(call => {
+      const card = document.getElementById(`card-${call.index}`);
+      if (!card) return;
+      const matchFilter =
+        activeFilter === "all" ||
+        (activeFilter === "voicemail" && call.voicemail) ||
+        (activeFilter === "calling"   && (call.status === "calling" || call.status === "in-progress")) ||
+        call.status === activeFilter;
+      const matchSearch = !q || call.number.toLowerCase().includes(q);
+      const show = matchFilter && matchSearch;
+      card.classList.toggle("hidden", !show);
+      if (show) visible++;
+    });
+    document.getElementById("list-count").textContent = `${visible} shown`;
+  }
+
+  // ── Toggle detail ─────────────────────────────────────────────────────────
   function toggleDetail(idx) {
     expanded[idx] = !expanded[idx];
-    const el = document.getElementById(`detail-${idx}`);
-    const btn = document.getElementById(`expand-btn-${idx}`);
-    if (!el) return;
-    if (expanded[idx]) {
-      el.classList.add("open");
-      if (btn) btn.textContent = "Hide details";
-    } else {
-      el.classList.remove("open");
-      if (btn) btn.textContent = "Show details";
-    }
+    const detail = document.getElementById(`detail-${idx}`);
+    const btn    = document.getElementById(`expand-btn-${idx}`);
+    if (!detail) return;
+    detail.style.display = expanded[idx] ? "block" : "none";
+    if (btn) btn.textContent = expanded[idx] ? "Hide details" : "Show details";
   }
 
-  // ── Polling ─────────────────────────────────────────────────────────────────
+  // ── Polling ───────────────────────────────────────────────────────────────
   function startPolling() {
     if (polling) clearInterval(polling);
-    polling = setInterval(fetchStatus, 3000);
+    polling = setInterval(fetchStatus, 2500);
     fetchStatus();
   }
   function stopPolling() {
     if (polling) { clearInterval(polling); polling = null; }
   }
-
   function fetchStatus() {
-    fetch("/status")
-      .then(r => r.json())
-      .then(data => {
-        updateStats(data.stats);
-        updateProgress(data.stats);
-        renderCalls(data.calls);
-        document.getElementById("list-count").textContent =
-          `${(data.calls || []).length} call${(data.calls||[]).length !== 1 ? "s" : ""}`;
-
-        if (!data.running && !data.paused) {
-          stopPolling();
-          setUIState("idle");
-        } else if (data.paused) {
-          setUIState("paused");
-        }
-
-        // Keep live dot synced
-        document.getElementById("live-dot").classList.toggle(
-          "visible", data.running && !data.paused
-        );
-      });
+    fetch("/status").then(r => r.json()).then(data => {
+      allCalls = data.calls || [];
+      updateStats(data.stats);
+      updateProgress(data.stats);
+      renderCalls(allCalls);
+      syncUIState(data);
+    }).catch(() => {});
+  }
+  function syncUIState(data) {
+    if (!data.running && !data.paused) {
+      stopPolling();
+      setUIState("idle");
+    } else if (data.paused) {
+      setUIState("paused");
+    } else {
+      setUIState("running");
+    }
   }
 
-  // ── UI state machine ────────────────────────────────────────────────────────
+  // ── UI state ──────────────────────────────────────────────────────────────
   function setUIState(state) {
-    const start  = document.getElementById("start-btn");
-    const stop   = document.getElementById("stop-btn");
-    const pause  = document.getElementById("pause-btn");
-    const resume = document.getElementById("resume-btn");
-    const liveDot = document.getElementById("live-dot");
+    const s  = document.getElementById("start-btn");
+    const st = document.getElementById("stop-btn");
+    const pa = document.getElementById("pause-btn");
+    const re = document.getElementById("resume-btn");
+    const chip  = document.getElementById("status-chip");
+    const label = document.getElementById("status-label");
 
-    start.disabled  = (state === "running" || state === "paused");
-    stop.disabled   = (state === "idle");
-    pause.disabled  = (state !== "running");
-    resume.disabled = (state !== "paused");
-    liveDot.classList.toggle("visible", state === "running");
+    s.disabled  = state !== "idle";
+    st.disabled = state === "idle";
+    pa.disabled = state !== "running";
+    re.disabled = state !== "paused";
+
+    chip.className = "status-chip";
+    if (state === "running") { chip.classList.add("live");   label.textContent = "Live"; }
+    else if (state === "paused") { chip.classList.add("paused"); label.textContent = "Paused"; }
+    else { label.textContent = "Idle"; }
   }
-
   function showCampaignUI() {
-    document.getElementById("stats-bar").style.display    = "flex";
-    document.getElementById("progress-wrap").style.display = "block";
-    document.getElementById("list-section").style.display  = "block";
-    document.getElementById("empty-state").style.display   = "none";
+    document.getElementById("stats-grid").style.display    = "grid";
+    document.getElementById("progress-panel").style.display = "block";
+    document.getElementById("list-section").style.display   = "block";
+    document.getElementById("empty-state").style.display    = "none";
+  }
+  function hideCampaignUI() {
+    document.getElementById("stats-grid").style.display    = "none";
+    document.getElementById("progress-panel").style.display = "none";
+    document.getElementById("list-section").style.display   = "none";
+    document.getElementById("empty-state").style.display    = "block";
   }
 
-  // ── Stats & progress ─────────────────────────────────────────────────────────
+  // ── Stats ─────────────────────────────────────────────────────────────────
   function updateStats(s) {
     if (!s) return;
     document.getElementById("stat-total").textContent    = s.total;
@@ -593,107 +867,130 @@
     document.getElementById("stat-failed").textContent   = s.failed;
     document.getElementById("stat-pending").textContent  = s.pending;
   }
-
   function updateProgress(s) {
     if (!s || !s.total) return;
     const finished = s.done + s.failed;
     const pct = Math.round(finished / s.total * 100);
-    document.getElementById("progress-fill").style.width  = pct + "%";
-    document.getElementById("progress-pct").textContent   = pct + "%";
-    document.getElementById("progress-label").textContent = `${finished} of ${s.total} calls completed`;
+    document.getElementById("progress-fill").style.width = pct + "%";
+    document.getElementById("progress-pct").textContent  = pct + "%";
+    document.getElementById("prog-done").textContent     = finished;
+    document.getElementById("prog-left").textContent     = s.total - finished;
+    document.getElementById("prog-fail").textContent     = s.failed;
+    document.getElementById("progress-label").textContent =
+      finished >= s.total ? "Campaign complete" : `${finished} of ${s.total} calls completed`;
   }
 
-  // ── Render calls ─────────────────────────────────────────────────────────────
+  // ── Render calls ──────────────────────────────────────────────────────────
   function renderCalls(calls) {
     if (!calls || !calls.length) return;
     const list = document.getElementById("call-list");
 
-    // Preserve expanded state across re-renders
-    list.innerHTML = calls.map(call => buildCard(call)).join("");
-    // Re-apply expanded state
-    calls.forEach(call => {
-      if (expanded[call.index]) {
-        const el = document.getElementById(`detail-${call.index}`);
-        if (el) el.classList.add("open");
-      }
-    });
+    // Only rebuild DOM if something changed (avoid jank on large lists)
+    const newHTML = calls.map(buildCard).join("");
+    if (list.dataset.lastHash !== newHTML.length + "") {
+      list.innerHTML = newHTML;
+      list.dataset.lastHash = newHTML.length + "";
+      // Restore expanded state
+      calls.forEach(c => {
+        if (expanded[c.index]) {
+          const d = document.getElementById(`detail-${c.index}`);
+          if (d) d.style.display = "block";
+          const b = document.getElementById(`expand-btn-${c.index}`);
+          if (b) b.textContent = "Hide details";
+        }
+      });
+    }
+
+    applyFilters();
+    autoScrollToActive(calls);
+  }
+
+  function autoScrollToActive(calls) {
+    const active = calls.find(c => c.status === "calling" || c.status === "in-progress");
+    if (!active) return;
+    const el = document.getElementById(`card-${active.index}`);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
   function buildCard(call) {
     const idx      = call.index;
     const isActive = call.status === "calling" || call.status === "in-progress";
-    const isDone   = call.status === "ended";
-    const isError  = call.status === "error";
 
-    // Card class
-    const cardClass = isActive ? "active" : isDone ? "ended" : isError ? "error" : "";
-
-    // Badge
-    let badgeClass, badgeLabel;
-    if      (call.status === "calling")      { badgeClass = "badge-calling";     badgeLabel = "Calling..."; }
-    else if (call.status === "in-progress")  { badgeClass = "badge-in-progress"; badgeLabel = "In Progress"; }
-    else if (call.status === "ended")        {
-      badgeClass = call.voicemail ? "badge-ended-vm" : "badge-ended";
-      badgeLabel = call.voicemail ? "Voicemail" : "Ended";
+    // Status badge
+    let bCls, bLabel;
+    if      (call.status === "calling")     { bCls = "badge-calling";     bLabel = "Calling..."; }
+    else if (call.status === "in-progress") { bCls = "badge-in-progress"; bLabel = "In Progress"; }
+    else if (call.status === "ended")       {
+      bCls   = call.voicemail ? "badge-voicemail" : "badge-ended";
+      bLabel = call.voicemail ? "Voicemail" : "Ended";
     }
-    else if (call.status === "error")        { badgeClass = "badge-error";   badgeLabel = "Error"; }
-    else                                     { badgeClass = "badge-pending"; badgeLabel = "Pending"; }
+    else if (call.status === "error")       { bCls = "badge-error";   bLabel = "Failed"; }
+    else                                    { bCls = "badge-pending"; bLabel = "Pending"; }
 
-    // Meta elements
-    const duration  = call.duration  ? `<span class="duration">${esc(call.duration)}</span>` : "";
-    const sentiment = call.sentiment ? `<span class="sentiment sentiment-${esc(call.sentiment)}">${esc(call.sentiment)}</span>` : "";
-    const checkmark = call.successful === true ? `<span class="icon-check">&#10003; Success</span>` : "";
-    const vmIcon    = call.voicemail           ? `<span class="icon-voicemail">&#128222; VM</span>` : "";
+    // Meta tags
+    const dur  = call.duration  ? `<span class="duration">${esc(call.duration)}</span>` : "";
+    const sent = call.sentiment && call.sentiment !== "Unknown"
+      ? `<span class="sentiment-pill s-${esc(call.sentiment)}">${esc(call.sentiment)}</span>` : "";
+    const vm   = call.voicemail    ? `<span class="tag-vm">VM</span>` : "";
+    const ok   = call.successful === true ? `<span class="tag-success">&#10003; Success</span>` : "";
 
-    // Retry: show on any non-active card except pending
-    const canRetry  = !isActive && call.status !== "pending";
-    const retryBtn  = canRetry
+    // Retry (not on active or pending)
+    const canRetry = !isActive && call.status !== "pending";
+    const retryBtn = canRetry
       ? `<button class="retry-btn" onclick="retryCall(${idx})">&#8635; Retry</button>` : "";
 
-    // Detail section (summary + disconnect + recording)
-    let detailContent = "";
+    // Detail content
+    let detail = "";
     if (call.summary) {
-      detailContent += `<div class="call-summary-text">${esc(call.summary)}</div>`;
+      detail += `<div class="summary-text">${esc(call.summary)}</div>`;
     }
     if (call.disconnection_reason) {
-      detailContent += `<div class="call-disconn">Disconnect reason: ${esc(call.disconnection_reason)}</div>`;
+      detail += `<div class="disconn-reason">Disconnect: ${esc(call.disconnection_reason)}</div>`;
     }
     if (call.recording_url) {
-      detailContent += `<a class="recording-link" href="${esc(call.recording_url)}" target="_blank">&#9654; Listen to recording</a>`;
+      detail += `<a class="recording-btn" href="${esc(call.recording_url)}" target="_blank">&#9654; Listen to recording</a>`;
     }
 
-    const hasDetail = detailContent.length > 0;
-    const expandBtn = hasDetail
-      ? `<button class="expand-btn" id="expand-btn-${idx}" onclick="toggleDetail(${idx})">${expanded[idx] ? "Hide details" : "Show details"}</button>`
+    const hasDetail = detail.length > 0;
+    const expandRow = hasDetail
+      ? `<div class="expand-row">
+           <button class="expand-btn" id="expand-btn-${idx}" onclick="toggleDetail(${idx})">Show details</button>
+         </div>`
+      : "";
+    const detailDiv = hasDetail
+      ? `<div class="card-detail" id="detail-${idx}" style="display:none;">${detail}</div>`
       : "";
 
     return `
-      <div class="call-card ${cardClass}">
-        <div class="call-top">
+      <div class="call-card status-${esc(call.status)}" id="card-${idx}">
+        <div class="card-row1">
+          <span class="call-idx">#${idx + 1}</span>
           <span class="call-number">${esc(call.number)}</span>
-          <div class="call-meta">
-            ${duration}
-            <span class="badge ${badgeClass}">${badgeLabel}</span>
-            ${sentiment}
-            ${vmIcon}
-            ${checkmark}
-            ${retryBtn}
+          <div class="card-meta">
+            ${dur}
+            <span class="badge ${bCls}">${bLabel}</span>
+            ${sent}${vm}${ok}${retryBtn}
           </div>
         </div>
-        ${expandBtn}
-        <div class="call-detail" id="detail-${idx}">
-          ${detailContent}
-        </div>
+        ${expandRow}
+        ${detailDiv}
       </div>`;
   }
 
   function esc(str) {
     if (!str) return "";
     return String(str)
-      .replace(/&/g,"&amp;")
-      .replace(/</g,"&lt;")
-      .replace(/>/g,"&gt;")
-      .replace(/"/g,"&quot;");
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  // ── Toast ─────────────────────────────────────────────────────────────────
+  function toast(msg, type) {
+    const el = document.createElement("div");
+    el.className = "toast" + (type ? " " + type : "");
+    el.textContent = msg;
+    document.getElementById("toast-container").appendChild(el);
+    setTimeout(() => el.remove(), 2800);
   }
 
   // Init
