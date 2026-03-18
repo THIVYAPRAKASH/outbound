@@ -558,8 +558,10 @@
     }).catch(()=>{});
   }
   function syncState(data) {
-    if (!data.running && !data.paused) { stopPolling(); setUIState("idle"); }
-    else if (data.paused) setUIState("paused");
+    if (!data.running && !data.paused) {
+      stopPolling(); setUIState("idle");
+      // Keep campaign UI visible after campaign ends so user can see results
+    } else if (data.paused) setUIState("paused");
     else setUIState("running");
   }
 
@@ -686,6 +688,19 @@
   }
 
   updateCount();
+
+  // On page load: check if a campaign is already running (e.g. after browser refresh)
+  fetch("/status").then(r=>r.json()).then(data=>{
+    if (data.calls && data.calls.length) {
+      allCalls = data.calls;
+      showCampaignUI();
+      updateStats(data.stats);
+      updateProgress(data.stats);
+      renderCalls(data.calls);
+      syncState(data);
+      if (data.running || data.paused) startPolling();
+    }
+  }).catch(()=>{});
 </script>
 </body>
 </html>
