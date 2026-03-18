@@ -240,8 +240,10 @@ def webhook_log():
 def webhook():
     data        = request.get_json(silent=True) or {}
     event       = data.get("event", "")
-    call_id     = data.get("call_id")
-    call_status = data.get("call_status", "")
+    # Retell nests all call fields under data["call"]
+    call_data   = data.get("call", {}) or {}
+    call_id     = call_data.get("call_id")
+    call_status = call_data.get("call_status", "")
 
     # Log every webhook so we can debug in Railway logs
     app.logger.info(f"WEBHOOK event={event!r} call_id={call_id!r} call_status={call_status!r} keys={list(data.keys())}")
@@ -250,7 +252,7 @@ def webhook():
 
     # ── Post-call analysis ────────────────────────────────────────────────────
     if event == "call_analyzed":
-        analysis = data.get("call_analysis", {}) or {}
+        analysis = call_data.get("call_analysis", {}) or {}
         with campaign_lock:
             for i, call in enumerate(campaign["calls"]):
                 if call.get("call_id") == call_id:
@@ -271,11 +273,11 @@ def webhook():
                 return jsonify({"received": True})   # duplicate, ignore
             _ended_call_ids.add(call_id)
 
-        start  = data.get("start_timestamp", 0)
-        end    = data.get("end_timestamp", 0)
-        dur_ms = data.get("duration_ms") or (end - start if start and end else 0)
-        disconn = data.get("disconnection_reason", "")
-        rec_url = data.get("recording_url", "")
+        start  = call_data.get("start_timestamp", 0)
+        end    = call_data.get("end_timestamp", 0)
+        dur_ms = call_data.get("duration_ms") or (end - start if start and end else 0)
+        disconn = call_data.get("disconnection_reason", "")
+        rec_url = call_data.get("recording_url", "")
 
         trigger_next = False
         with campaign_lock:
