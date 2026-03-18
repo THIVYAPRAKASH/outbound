@@ -155,6 +155,40 @@ def reset_campaign():
     return jsonify({"message": "Reset complete"})
 
 
+@app.route("/retry/<int:idx>", methods=["POST"])
+def retry_call(idx):
+    """Manually retry a single call by index. Only works if not already calling."""
+    with campaign_lock:
+        if idx < 0 or idx >= len(campaign["calls"]):
+            return jsonify({"error": "Invalid index"}), 400
+        call = campaign["calls"][idx]
+        if call["status"] in ("calling", "in-progress"):
+            return jsonify({"error": "Call already in progress"}), 400
+        # Reset this call's record
+        campaign["calls"][idx]["status"]               = "calling"
+        campaign["calls"][idx]["call_id"]              = None
+        campaign["calls"][idx]["duration"]             = None
+        campaign["calls"][idx]["summary"]              = None
+        campaign["calls"][idx]["sentiment"]            = None
+        campaign["calls"][idx]["voicemail"]            = False
+        campaign["calls"][idx]["successful"]           = None
+        campaign["calls"][idx]["disconnection_reason"] = None
+        campaign["calls"][idx]["recording_url"]        = None
+        to_number = campaign["calls"][idx]["number"]
+
+    call_id, error = make_call(to_number)
+
+    with campaign_lock:
+        if error:
+            campaign["calls"][idx]["status"]  = "error"
+            campaign["calls"][idx]["summary"] = error
+        else:
+            campaign["calls"][idx]["call_id"] = call_id
+            campaign["calls"][idx]["status"]  = "in-progress"
+
+    return jsonify({"error": error} if error else {"call_id": call_id})
+
+
 @app.route("/webhook", methods=["POST"])
 def webhook():
     data        = request.get_json(silent=True) or {}
@@ -210,9 +244,10 @@ def status():
         failed   = sum(1 for c in calls if c["status"] == "error")
         voicemail = sum(1 for c in calls if c.get("voicemail"))
         pending  = sum(1 for c in calls if c["status"] == "pending")
+        calls_with_index = [dict(c, index=i) for i, c in enumerate(calls)]
         return jsonify({
             "running":  campaign["running"],
-            "calls":    calls,
+            "calls":    calls_with_index,
             "stats": {
                 "total":    total,
                 "calling":  calling,

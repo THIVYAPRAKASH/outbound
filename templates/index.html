@@ -247,6 +247,12 @@
     .icon-check    { color: #27ae60; font-size: 0.85rem; }
     .icon-voicemail { color: #f39c12; font-size: 0.78rem; }
     .duration      { font-size: 0.78rem; color: #5a6080; }
+    .retry-btn {
+      background: none; border: 1px solid #3a3f60; color: #7a80a8;
+      border-radius: 5px; padding: 2px 8px; font-size: 0.75rem;
+      cursor: pointer; margin-left: 6px;
+    }
+    .retry-btn:hover { border-color: #5a80ff; color: #5a80ff; }
 
     .call-summary {
       margin-top: 10px;
@@ -519,6 +525,11 @@
     const recHtml = call.recording_url
       ? `<a class="recording-link" href="${esc(call.recording_url)}" target="_blank">&#9654; Listen to recording</a>` : "";
 
+    // Retry button — only show when call is done (not currently active)
+    const canRetry = !isActive;
+    const retryBtn = canRetry
+      ? `<button class="retry-btn" onclick="retryCall(${call.index})">&#8635; Retry</button>` : "";
+
     return `
       <div class="call-card ${isActive ? "active" : ""}">
         <div class="call-top">
@@ -529,11 +540,20 @@
             ${sentiment}
             ${vmIcon}
             ${checkmark}
+            ${retryBtn}
           </div>
         </div>
         ${summaryHtml}
         ${recHtml}
       </div>`;
+  }
+
+  function retryCall(idx) {
+    if (!confirm("Retry this call?")) return;
+    fetch(`/retry/${idx}`, { method: "POST" })
+      .then(r => r.json())
+      .then(d => { if (d.error) alert("Retry failed: " + d.error); })
+      .catch(() => alert("Retry request failed"));
   }
 
   function esc(str) {
