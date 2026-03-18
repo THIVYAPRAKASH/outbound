@@ -2,14 +2,20 @@ import os
 import csv
 import io
 import time
+import logging
 import threading
 import requests
+from collections import deque
 from flask import Flask, request, jsonify, render_template, Response
 from dotenv import load_dotenv
 
 load_dotenv()
 
 app = Flask(__name__)
+app.logger.setLevel(logging.INFO)
+
+# Store last 30 raw webhook payloads for debugging
+_webhook_log = deque(maxlen=30)
 
 # ── Config ─────────────────────────────────────────────────────────────────────
 RETELL_API_KEY     = os.getenv("RETELL_API_KEY", "")
@@ -224,11 +230,23 @@ def retry_call(idx):
     return jsonify({"error": error} if error else {"call_id": call_id})
 
 
+@app.route("/webhook-log")
+def webhook_log():
+    """Debug: view last 30 raw webhook payloads."""
+    return jsonify(list(_webhook_log))
+
+
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    data    = request.get_json(silent=True) or {}
-    event   = data.get("event", "")
-    call_id = data.get("call_id")
+    data        = request.get_json(silent=True) or {}
+    event       = data.get("event", "")
+    call_id     = data.get("call_id")
+    call_status = data.get("call_status", "")
+
+    # Log every webhook so we can debug in Railway logs
+    app.logger.info(f"WEBHOOK event={event!r} call_id={call_id!r} call_status={call_status!r} keys={list(data.keys())}")
+    _webhook_log.appendleft({"event": event, "call_id": call_id, "call_status": call_status,
+                              "keys": list(data.keys()), "data": data})
 
     # ── Post-call analysis ────────────────────────────────────────────────────
     if event == "call_analyzed":
@@ -244,7 +262,10 @@ def webhook():
         return jsonify({"received": True})
 
     # ── Call ended — deduplicated, only fires once per call_id ────────────────
-    if event == "call_ended":
+    # Match on event name OR on call_status (fallback for API version differences)
+    is_ended = (event == "call_ended") or \
+               (call_status in ("ended", "error") and event not in ("call_analyzed", "call_started", "transcript_updated"))
+    if is_ended:
         with campaign_lock:
             if call_id in _ended_call_ids:
                 return jsonify({"received": True})   # duplicate, ignore
@@ -253,9 +274,8 @@ def webhook():
         start  = data.get("start_timestamp", 0)
         end    = data.get("end_timestamp", 0)
         dur_ms = data.get("duration_ms") or (end - start if start and end else 0)
-        call_status = data.get("call_status", "ended")
-        disconn     = data.get("disconnection_reason", "")
-        rec_url     = data.get("recording_url", "")
+        disconn = data.get("disconnection_reason", "")
+        rec_url = data.get("recording_url", "")
 
         trigger_next = False
         with campaign_lock:
