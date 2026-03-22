@@ -252,7 +252,7 @@ def export_leads():
     writer.writerow(["Number", "Duration", "Sentiment", "Summary", "Recording URL"])
     for c in calls:
         writer.writerow([
-            c.get("number", ""),
+            "'" + c.get("number", ""),
             c.get("duration", ""),
             c.get("sentiment", ""),
             c.get("summary", ""),
@@ -380,7 +380,7 @@ def export_csv():
     ])
     for c in calls:
         writer.writerow([
-            c.get("number", ""),
+            "'" + c.get("number", ""),
             c.get("status", ""),
             c.get("duration", ""),
             c.get("sentiment", ""),
