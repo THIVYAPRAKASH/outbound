@@ -194,6 +194,9 @@
     }
     .pill:hover { border-color: #bfdbfe; color: #2563eb; }
     .pill.active { background: #2563eb; border-color: #2563eb; color: #fff; }
+    .pill-leads { color: #0891b2; border-color: #a5f3fc; }
+    .pill-leads:hover { border-color: #0891b2; color: #0891b2; }
+    .pill-leads.active { background: #0891b2; border-color: #0891b2; color: #fff; }
 
     .search-wrap {
       display: flex; align-items: center; gap: 8px;
@@ -319,7 +322,7 @@
     @keyframes tout { from{opacity:1} to{opacity:0;transform:translateY(6px)} }
 
     @media (max-width: 700px) {
-      .stats-grid { grid-template-columns: repeat(3,1fr); }
+      .stats-grid { grid-template-columns: repeat(4,1fr); }
       .topbar { padding: 0 16px; }
       .main   { padding: 14px 12px 80px; }
     }
@@ -439,7 +442,7 @@
         <div class="pill"        data-filter="ended"     onclick="setFilter('ended')">Done</div>
         <div class="pill"        data-filter="voicemail" onclick="setFilter('voicemail')">Voicemail</div>
         <div class="pill"        data-filter="error"     onclick="setFilter('error')">Failed</div>
-        <div class="pill"        data-filter="leads"     onclick="setFilter('leads')" style="color:#0891b2;">&#11088; Leads</div>
+        <div class="pill pill-leads" data-filter="leads" onclick="setFilter('leads')">&#11088; Leads</div>
       </div>
       <div class="toolbar-right">
         <div class="search-wrap">
