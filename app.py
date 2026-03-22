@@ -144,6 +144,7 @@ def start_campaign():
                 "successful":           None,
                 "disconnection_reason": None,
                 "recording_url":        None,
+                "is_lead":              False,
             }
             for n in numbers
         ]
@@ -214,6 +215,7 @@ def retry_call(idx):
             "successful":           None,
             "disconnection_reason": None,
             "recording_url":        None,
+            "is_lead":              False,
         })
         to_number = campaign["calls"][idx]["number"]
 
@@ -228,6 +230,40 @@ def retry_call(idx):
             campaign["calls"][idx]["status"]  = "in-progress"
 
     return jsonify({"error": error} if error else {"call_id": call_id})
+
+
+@app.route("/toggle-lead/<int:idx>", methods=["POST"])
+def toggle_lead(idx):
+    with campaign_lock:
+        if idx < 0 or idx >= len(campaign["calls"]):
+            return jsonify({"error": "Invalid index"}), 400
+        campaign["calls"][idx]["is_lead"] = not campaign["calls"][idx].get("is_lead", False)
+        return jsonify({"is_lead": campaign["calls"][idx]["is_lead"]})
+
+
+@app.route("/export-leads")
+def export_leads():
+    """Download only leads (is_lead=True) as CSV."""
+    with campaign_lock:
+        calls = [c for c in campaign["calls"] if c.get("is_lead")]
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["Number", "Duration", "Sentiment", "Summary", "Recording URL"])
+    for c in calls:
+        writer.writerow([
+            c.get("number", ""),
+            c.get("duration", ""),
+            c.get("sentiment", ""),
+            c.get("summary", ""),
+            c.get("recording_url", ""),
+        ])
+
+    return Response(
+        output.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=leads.csv"}
+    )
 
 
 @app.route("/webhook-log")
@@ -260,6 +296,9 @@ def webhook():
                     campaign["calls"][i]["sentiment"]  = analysis.get("user_sentiment", "Unknown")
                     campaign["calls"][i]["voicemail"]  = bool(analysis.get("in_voicemail", False))
                     campaign["calls"][i]["successful"] = bool(analysis.get("call_successful", False))
+                    # Auto-tag as lead if call was successful
+                    if bool(analysis.get("call_successful", False)):
+                        campaign["calls"][i]["is_lead"] = True
                     break
         return jsonify({"received": True})
 
@@ -309,6 +348,7 @@ def status():
         failed    = sum(1 for c in calls if c["status"] == "error")
         voicemail = sum(1 for c in calls if c.get("voicemail"))
         pending   = sum(1 for c in calls if c["status"] == "pending")
+        leads     = sum(1 for c in calls if c.get("is_lead"))
         calls_out = [dict(c, index=i) for i, c in enumerate(calls)]
         return jsonify({
             "running": campaign["running"],
@@ -321,6 +361,7 @@ def status():
                 "failed":    failed,
                 "voicemail": voicemail,
                 "pending":   pending,
+                "leads":     leads,
             },
         })
 

@@ -126,7 +126,7 @@
 
     /* ── Stat cards ──────────────────────────────────────────────────────────── */
     .stats-grid {
-      display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 18px;
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; margin-bottom: 18px;
     }
     .stat-card {
       background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
@@ -156,6 +156,8 @@
     .s-failed .stat-num { color: #dc2626; }
     .s-pending::after    { background: linear-gradient(90deg,#64748b,#94a3b8); }
     .s-pending .stat-num { color: #64748b; }
+    .s-leads::after    { background: linear-gradient(90deg,#0891b2,#06b6d4); }
+    .s-leads .stat-num { color: #0891b2; }
 
     /* ── Progress ────────────────────────────────────────────────────────────── */
     .progress-card {
@@ -258,6 +260,14 @@
 
     .tag-vm      { background: #fef3c7; color: #d97706; padding: 3px 9px; border-radius: 20px; font-size: 0.66rem; font-weight: 700; }
     .tag-success { color: #16a34a; font-size: 0.78rem; font-weight: 700; }
+    .lead-btn {
+      background: #fff; border: 1px solid #e2e8f0; color: #cbd5e1;
+      border-radius: 6px; padding: 3px 9px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
+      transition: all 0.13s;
+    }
+    .lead-btn:hover { border-color: #0891b2; color: #0891b2; }
+    .lead-btn.active { background: #ecfeff; border-color: #0891b2; color: #0891b2; }
+    .badge-lead { background: #ecfeff; color: #0891b2; border: 1px solid #a5f3fc; }
     .duration    { font-size: 0.75rem; color: #64748b; font-variant-numeric: tabular-nums; }
 
     .retry-btn {
@@ -336,7 +346,8 @@
     <button class="btn btn-success" id="resume-btn" onclick="resumeCampaign()" disabled>&#9654; Resume</button>
     <button class="btn btn-danger"  id="stop-btn"   onclick="stopCampaign()"   disabled>&#9632; Stop</button>
     <button class="btn btn-ghost"   id="reset-btn"  onclick="resetCampaign()">&#8635; Reset</button>
-    <button class="btn btn-ghost"   onclick="window.location='/export'">&#8595; Export</button>
+    <button class="btn btn-ghost"   onclick="window.location='/export'">&#8595; Export All</button>
+    <button class="btn btn-ghost"   id="export-leads-btn" onclick="window.location='/export-leads'" style="color:#0891b2;border-color:#a5f3fc;">&#11088; Export Leads</button>
   </div>
 </div>
 
@@ -397,6 +408,11 @@
       <div class="stat-num" id="stat-pending">0</div>
       <div class="stat-label">Pending</div>
     </div>
+    <div class="stat-card s-leads">
+      <div class="stat-icon">&#11088;</div>
+      <div class="stat-num" id="stat-leads">0</div>
+      <div class="stat-label">Leads</div>
+    </div>
   </div>
 
   <!-- Progress -->
@@ -423,6 +439,7 @@
         <div class="pill"        data-filter="ended"     onclick="setFilter('ended')">Done</div>
         <div class="pill"        data-filter="voicemail" onclick="setFilter('voicemail')">Voicemail</div>
         <div class="pill"        data-filter="error"     onclick="setFilter('error')">Failed</div>
+        <div class="pill"        data-filter="leads"     onclick="setFilter('leads')" style="color:#0891b2;">&#11088; Leads</div>
       </div>
       <div class="toolbar-right">
         <div class="search-wrap">
@@ -504,6 +521,15 @@
       toast("Campaign reset");
     });
   }
+  function toggleLead(idx) {
+    fetch(`/toggle-lead/${idx}`,{method:"POST"}).then(r=>r.json()).then(d=>{
+      if(d.error) { toast("Error: "+d.error,"error"); return; }
+      allCalls[idx].is_lead = d.is_lead;
+      toast(d.is_lead ? "Marked as lead ★" : "Removed from leads", d.is_lead?"success":"");
+      fetchStatus();
+    }).catch(()=>toast("Failed","error"));
+  }
+
   function retryCall(idx) {
     if (!confirm(`Retry call #${idx+1}? Dials exactly once.`)) return;
     fetch(`/retry/${idx}`,{method:"POST"}).then(r=>r.json()).then(d=>{
@@ -525,6 +551,7 @@
       const matchF = activeFilter==="all" ||
         (activeFilter==="voicemail" && c.voicemail) ||
         (activeFilter==="calling" && (c.status==="calling"||c.status==="in-progress")) ||
+        (activeFilter==="leads" && c.is_lead) ||
         c.status===activeFilter;
       const matchQ = !q || c.number.toLowerCase().includes(q);
       const show = matchF && matchQ;
@@ -594,6 +621,7 @@
     document.getElementById("stat-voicemail").textContent= s.voicemail;
     document.getElementById("stat-failed").textContent   = s.failed;
     document.getElementById("stat-pending").textContent  = s.pending;
+    document.getElementById("stat-leads").textContent   = s.leads || 0;
   }
   function updateProgress(s) {
     if (!s||!s.total) return;
@@ -646,6 +674,8 @@
     const ok   = c.successful===true ? `<span class="tag-success">&#10003; Success</span>` : "";
     const retry = !isActive && c.status!=="pending"
       ? `<button class="retry-btn" onclick="retryCall(${idx})">&#8635; Retry</button>` : "";
+    const leadBtn = c.status==="ended"
+      ? `<button class="lead-btn${c.is_lead?" active":""}" onclick="toggleLead(${idx})" title="${c.is_lead?"Remove lead":"Mark as lead"}">${c.is_lead?"&#11088; Lead":"&#9733; Lead"}</button>` : "";
 
     // Build detail section
     let detail = "";
@@ -668,7 +698,7 @@
         <div class="card-row">
           <span class="call-idx">#${idx+1}</span>
           <span class="call-number">${esc(c.number)}</span>
-          <div class="card-meta">${dur}<span class="badge ${bCls}">${bLabel}</span>${sent}${vm}${ok}${retry}</div>
+          <div class="card-meta">${dur}<span class="badge ${bCls}">${bLabel}</span>${sent}${vm}${ok}${leadBtn}${retry}</div>
         </div>
         ${expandRow}${detailDiv}
       </div>`;
