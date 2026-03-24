@@ -120,7 +120,7 @@ def index():
 @app.route("/start", methods=["POST"])
 def start_campaign():
     data    = request.get_json()
-    numbers = [n.strip() for n in data.get("numbers", []) if n.strip()]
+    numbers = [n.strip().replace(" ", "").replace("-", "") for n in data.get("numbers", []) if n.strip()]
     delay   = int(data.get("delay", 2))
 
     if not numbers:
@@ -324,7 +324,11 @@ def webhook():
                 if call.get("call_id") == call_id:
                     # Only update if not already finalised
                     if campaign["calls"][i]["status"] not in ("ended", "error"):
-                        campaign["calls"][i]["status"]               = call_status or "ended"
+                        # Normalize all terminal statuses to ended/error
+                        _status = call_status or "ended"
+                        if _status not in ("ended", "error"):
+                            _status = "error"
+                        campaign["calls"][i]["status"]               = _status
                         campaign["calls"][i]["duration"]             = _fmt_duration(dur_ms)
                         campaign["calls"][i]["disconnection_reason"] = disconn
                         campaign["calls"][i]["recording_url"]        = rec_url
